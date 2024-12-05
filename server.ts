@@ -1,11 +1,10 @@
-const express = require("express");
-const http = require("http");
-const socketIo = require("socket.io");
-const chokidar = require("chokidar");
-const path = require("path");
-import { watch } from "chokidar";
+import express, { Request, Response, Application } from "express"; // Import types
+import http from "http";
+import chokidar from "chokidar";
+import path from "path";
 import { getSubtitles } from "./ApiService";
 import { Subtitle } from "./interfaces/interfaces";
+const socketIo = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -29,6 +28,7 @@ function watchFolder() {
 }
 
 watchFolder();
+app.post('/upload-video')
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
