@@ -6,7 +6,20 @@ const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+function secondsToFrames(seconds: number) {
+  const frameRate = 30;
 
+  return Math.round(seconds * frameRate);
+}
+
+function updateSubtitles(subtitles: Subtitle[]): Subtitle[] {
+  const updatedSubtitles: Subtitle[] = subtitles.map((subtitle) => ({
+    ...subtitle,
+    startFrame: secondsToFrames(subtitle.startTime),
+    endFrame: secondsToFrames(subtitle.endTime),
+  }));
+  return updatedSubtitles;
+}
 export async function getSubtitles(
   filePath: string
 ): Promise<Subtitle[] | undefined> {
@@ -17,7 +30,9 @@ export async function getSubtitles(
     if(!response.data){
       console.error("Subtitles Error!: got undefined");  
     }
-    return response.data;
+    const subtitles = updateSubtitles(response.data)
+    
+    return subtitles;
   } catch (e: any) {
     console.error("Subtitles Error!: ", e.message);
   }
